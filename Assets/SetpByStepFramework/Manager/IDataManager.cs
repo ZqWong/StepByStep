@@ -12,5 +12,6 @@ namespace xr.SetpByStep.Manager
         void Initialize(JsonData stepJsonData);
 
 
+        void StepMoveNext();
     }
 }

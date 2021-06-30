@@ -13,6 +13,9 @@ public class AppManager : MonoBehaviour
 
     void Start()
     {
+        Debug.Log(LinearStepDataManager.Instance.StepDataEnumerator.Current.Id);
+
+
 
 
         //Expression e = new Expression("2 + 3 * 5");
@@ -34,30 +37,38 @@ public class AppManager : MonoBehaviour
         //Debug.Log(e.Evaluate());
 
 
-        ExpressionManager.Instance.CreateExpression("Plus", Plus);
+        //ExpressionManager.Instance.CreateExpression("Plus", Plus);
+        //ExpressionManager.Instance.CreateExpression("Plus", Max);
 
-        var ret = ExpressionManager.Instance.ExecuteExpression("Plus", "Plus(1, 2)");
-
-        Debug.Log(ret);
-    }
-
-    public void Function(string name, FunctionArgs args)
-    {
-        if (name == "SecretOperation")
-            args.Result = (int)args.Parameters[0].Evaluate() + (int)args.Parameters[1].Evaluate();
-    }
-
-    public void Plus(string name, FunctionArgs args)
-    {
-        if (name == "Plus")
-        {
-            args.Result = (int) args.Parameters[0].Evaluate() + (int) args.Parameters[1].Evaluate();
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        //var ret = ExpressionManager.Instance.ExecuteExpression("Plus", "Plus(1, 2)");
         
+        //Debug.Log(ret);
     }
+
+    //public void Function(string name, FunctionArgs args)
+    //{
+    //    if (name == "SecretOperation")
+    //        args.Result = (int)args.Parameters[0].Evaluate() + (int)args.Parameters[1].Evaluate();
+    //}
+
+    //public void Plus(string name, FunctionArgs args)
+    //{
+    //    if (name == "Plus")
+    //    {
+    //        args.Result = (int) args.Parameters[0].Evaluate() + (int) args.Parameters[1].Evaluate();
+    //    }
+    //}
+
+    //private int max = 0;
+    //public void Max(string name, FunctionArgs args)
+    //{
+    //    max = (int)args.Parameters[0].Evaluate() + (int)args.Parameters[1].Evaluate();
+    //    Debug.LogError(max);
+    //}
+
+    //// Update is called once per frame
+    //public void getbool(string name, FunctionArgs args)
+    //{
+    //    args.Result = true;
+    //}
 }
