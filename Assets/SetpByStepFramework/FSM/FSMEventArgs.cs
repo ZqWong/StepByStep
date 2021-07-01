@@ -21,11 +21,9 @@ namespace xr.SetpByStepFramework.FSM
 
     public class FSMEventFeedbackArg : FSMEventArgBase
     {
-        public JsonData FeedbackJsonData;
 
-        public FSMEventFeedbackArg(JsonData jsonData, Action callback = null) : base(callback)
-        {
-            FeedbackJsonData = jsonData;
+        public FSMEventFeedbackArg(Action callback = null) : base(callback)
+        {            
             callback?.Invoke();
         }
     }

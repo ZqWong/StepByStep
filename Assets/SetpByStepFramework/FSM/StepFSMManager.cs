@@ -105,8 +105,6 @@ namespace xr.SetpByStepFramework.FSM
             SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(
                 FSMEventConst.ENTER_START_STEP_KEY, 
                 new FSMEventFeedbackArg(
-                    //步骤不应该操作数据，应该是处理模块直接从数据模块拿
-                    null,
                     () =>
                 {
                     feedbackExecuteComplete = true;
@@ -126,7 +124,6 @@ namespace xr.SetpByStepFramework.FSM
             SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(
                 FSMEventConst.UPDATE_START_STEP_KEY,
                 new FSMEventFeedbackArg(
-                    null,
                     () =>
                 {
 
@@ -145,7 +142,6 @@ namespace xr.SetpByStepFramework.FSM
             SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(
                 FSMEventConst.ENTER_EXECUTE_STEP_KEY,
                 new FSMEventFeedbackArg(
-                    null,
                     () =>
                 {
                     feedbackExecuteComplete = true;
