@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Example;
 using NCalc;
 using UnityEngine;
+using xr.StepByStep.DataModel;
 using xr.StepByStepFramework.Expressions;
 
 public class AppManager : MonoBehaviour
@@ -16,7 +18,7 @@ public class AppManager : MonoBehaviour
         //Debug.Log(LinearStepDataManager.Instance.StepDataEnumerator.Current.Id);
 
 
-
+        FeedContentAnim var = new FeedContentAnim(this.gameObject, new FeedbackDataModelBase());
 
         //Expression e = new Expression("2 + 3 * 5");
         //object result = e.Evaluate();

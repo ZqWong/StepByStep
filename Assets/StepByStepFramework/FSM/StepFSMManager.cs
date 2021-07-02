@@ -46,19 +46,31 @@ namespace xr.StepByStepFramework.FSM
         #endregion
 
 
+        void OnEnable()
+        {
+            SingletonProvider<EventManager>.Instance.RegisterEvent(FSMEventConst.ENABLE_STEP_KEY, StartFSM);
+        }
+
+        void OnDisable()
+        {
+            SingletonProvider<EventManager>.Instance.UnRegisterEventHandler(FSMEventConst.ENABLE_STEP_KEY, StartFSM);
+        }
+
+
+
         public void Start()
         {
             ConfigureFSM();
-            StartFSM();
+            StartFSM(this, null);
             m_initialized = true;
         }
 
         public void Update()
-        {
+        {   
             UpdateFSM();
         }
 
-        private void StartFSM()
+        private void StartFSM(object sender, EventArgs e)
         {
             m_fsm.Start();
         }
@@ -134,7 +146,7 @@ namespace xr.StepByStepFramework.FSM
         private bool ExitStartStepExecuteComplete = false;
         private void ExitStartStepHandler()
         {
-            
+            SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(FSMEventConst.LEAVE_START_STEP_KEY, new FSMEventArgBase());
         }
         private void EnterExecuteStepHandler()
         {

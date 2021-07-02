@@ -8,6 +8,8 @@ namespace xr.StepByStepFramework.FSM
 {
     public class FSMEventConst
     {
+        public const string ENABLE_STEP_KEY = "ENABLE_STEP";
+
         public const string ENTER_START_STEP_KEY = "ENTER_START_STEP";
         public const string UPDATE_START_STEP_KEY = "UPDATE_START_STEP";
         public const string LEAVE_START_STEP_KEY = "LEAVE_START_STEP";

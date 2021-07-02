@@ -10,8 +10,9 @@ namespace xr.StepByStep.Manager
     public interface IDataManager
     {
         void Initialize(JsonData stepJsonData);
-
-
         void StepMoveNext();
+        bool CheckCurrentStepComplete();
+
+
     }
 }

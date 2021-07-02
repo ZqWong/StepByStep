@@ -9,7 +9,7 @@ namespace xr.StepByStep.DataModel
     {
         public FeedbackDataModelBase() { }
 
-        public FeedbackTypeEnum StepType { get; set; }
+        public string FeedbackType { get; set; }
 
 
         public FeedbackDataModelBase(JsonData jdata) : base(jdata)
