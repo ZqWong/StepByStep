@@ -65,7 +65,5 @@ namespace xr.SetpByStepFramework.FeedbackModule
         
         [Tooltip("此反馈播放所需的最大强度")]
         public float IntensityIntervalMax = 0f;
-
-        public int TargetBPM = 120;
     }
 }
