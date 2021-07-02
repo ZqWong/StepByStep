@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace xr.SetpByStepFramework.FeedbackModule
+namespace xr.StepByStepFramework.FeedbackModule
 {
     public class FeedbackDestroy : Feedback
     {

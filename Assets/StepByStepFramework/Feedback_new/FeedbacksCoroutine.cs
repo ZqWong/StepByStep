@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace xr.SetpByStepFramework.FeedbackModule
+namespace xr.StepByStepFramework.FeedbackModule
 {
     public class FeedbacksCoroutine
     {

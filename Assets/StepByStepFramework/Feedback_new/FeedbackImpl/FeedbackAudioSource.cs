@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.Audio;
 
-namespace xr.SetpByStepFramework.FeedbackModule
+namespace xr.StepByStepFramework.FeedbackModule
 {
     public class FeedbackAudioSource : Feedback
     {

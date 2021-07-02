@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.Events;
 
-namespace xr.SetpByStepFramework.FeedbackModule
+namespace xr.StepByStepFramework.FeedbackModule
 {    
     public struct FeedbacksEvent
     {

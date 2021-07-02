@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NCalc;
 using UnityEngine;
-using xr.SetpByStepFramework.Expressions;
+using xr.StepByStepFramework.Expressions;
 
 public class AppManager : MonoBehaviour
 {
@@ -13,7 +13,7 @@ public class AppManager : MonoBehaviour
 
     void Start()
     {
-        Debug.Log(LinearStepDataManager.Instance.StepDataEnumerator.Current.Id);
+        //Debug.Log(LinearStepDataManager.Instance.StepDataEnumerator.Current.Id);
 
 
 

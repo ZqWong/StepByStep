@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace xr.SetpByStepFramework.FeedbackModule
+namespace xr.StepByStepFramework.FeedbackModule
 {
     /// the possible modes for the timescale
     public enum TimescaleModes { Scaled, Unscaled }

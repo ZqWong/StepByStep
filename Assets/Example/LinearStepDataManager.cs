@@ -1,10 +1,10 @@
 ﻿using etp.xr.Tools;
 using LitJson;
-using xr.SetpByStep.Manager;
+using xr.StepByStep.Manager;
 using UnityEngine;
 using System.Collections.Generic;
 using etp.xr.Managers;
-using xr.SetpByStepFramework.FSM;
+using xr.StepByStepFramework.FSM;
 using System;
 
 public class LinearStepDataManager : SingletonMonoBehaviourClass<LinearStepDataManager>, IDataManager
