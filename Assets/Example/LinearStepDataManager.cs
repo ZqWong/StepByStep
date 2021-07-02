@@ -26,15 +26,13 @@ public class LinearStepDataManager : SingletonMonoBehaviourClass<LinearStepDataM
 
     private void StepMoveNextHandler(object sender, EventArgs e)
     {
-        throw new NotImplementedException();
+        StepMoveNext();
     }
 
     private void Awake()
     {
         JsonData jsonData = JsonTool.GetJsonData(Application.streamingAssetsPath + "/StepDataTest.json");
         Debug.Log("jsonString :" + JsonMapper.ToJson(jsonData));
-
-
         Initialize(jsonData);
     }
 
@@ -54,8 +52,15 @@ public class LinearStepDataManager : SingletonMonoBehaviourClass<LinearStepDataM
 
     public void StepMoveNext()
     {
-        StepDataEnumerator.MoveNext();
+        if (CheckCurrentStepComplete())
+        {
+            StepDataEnumerator.MoveNext();
+        }
     }
 
+    public bool CheckCurrentStepComplete()
+    {
+        return true;
+    }
 }
 
