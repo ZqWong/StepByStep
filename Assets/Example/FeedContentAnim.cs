@@ -35,7 +35,7 @@ namespace Assets.Example
 
         void OnGUI()
         {
-            if (GUILayout.Button("AnimConplete"))
+            if (GUILayout.Button("AnimComplete"))
             {
                 OnClickAnimComplete();
             }

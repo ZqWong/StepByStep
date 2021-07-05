@@ -149,7 +149,10 @@ namespace xr.StepByStepFramework.Feedback_old
             }
         }
 
-        public void  PlayFeedback()
+        /// <summary>
+        /// 播放反馈
+        /// </summary>
+        public void  PlayFeedback(Action callback)
         {
             Events.TriggerOnPlay();
             foreach (var feedback in FeedbackCollection)
@@ -160,6 +163,7 @@ namespace xr.StepByStepFramework.Feedback_old
                     {
                         Debug.Log("All Complete");
                         Events.TriggerOnComplete();
+                        callback?.Invoke();
                     }
                 }));
             }

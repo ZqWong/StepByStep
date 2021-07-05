@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LitJson;
+using xr.StepByStep.FSM;
 
 namespace xr.StepByStepFramework.FSM
 {
     public class FSMEventArgBase : EventArgs
     {
-        private Action ExecuteCompleteCallBack;
+        public Action ExecuteCompleteCallBack;
 
         public FSMEventArgBase() { }
 
@@ -19,12 +20,16 @@ namespace xr.StepByStepFramework.FSM
         }
     }
 
-    public class FSMEventFeedbackArg : FSMEventArgBase
+    public class FSMEventStateArg : FSMEventArgBase
     {
+        public StepFSMManager.FSMState PreState;
 
-        public FSMEventFeedbackArg(Action callback = null) : base(callback)
-        {            
-            //callback?.Invoke();
+        public StepFSMManager.FSMState CurrentState;
+
+        public FSMEventStateArg(StepFSMManager.FSMState pre, StepFSMManager.FSMState current, Action callback) : base(callback)
+        {
+            PreState = pre;
+            CurrentState = current;
         }
     }
 }

@@ -12,7 +12,10 @@ namespace xr.StepByStepFramework.FSM
 {
     public class StepFSMManager : SingletonMonoBehaviourClass<StepFSMManager>
     {
-        private enum FSMState
+        /// <summary>
+        /// FMS状态
+        /// </summary>
+        public enum FSMState
         {
             INITIAL,
             ENTER_STEP,
@@ -20,6 +23,9 @@ namespace xr.StepByStepFramework.FSM
             LEAVE_STEP
         }
 
+        /// <summary>
+        /// FMS事件
+        /// </summary>
         private enum FSMEvent
         {
             START,
@@ -29,12 +35,15 @@ namespace xr.StepByStepFramework.FSM
         }
 
         #region public variables
+
+        public FSMState CurrentState => m_fsm.CurrentState;
+
+        public bool UseUpdate { get; set; }
+
         /// <summary>
         /// 活跃状态
         /// </summary>
         public bool IsActive { get; private set; }
-
-        public StepDataModel CurrentStepDataModel;
 
         #endregion
 
@@ -45,7 +54,6 @@ namespace xr.StepByStepFramework.FSM
 
         #endregion
 
-
         void OnEnable()
         {
             SingletonProvider<EventManager>.Instance.RegisterEvent(FSMEventConst.ENABLE_STEP_KEY, StartFSM);
@@ -55,7 +63,10 @@ namespace xr.StepByStepFramework.FSM
         {
             SingletonProvider<EventManager>.Instance.UnRegisterEventHandler(FSMEventConst.ENABLE_STEP_KEY, StartFSM);
         }
-
+        
+        /// <summary>
+        /// 初始化FSM
+        /// </summary>
         public void Start()
         {
             ConfigureFSM();
@@ -64,10 +75,18 @@ namespace xr.StepByStepFramework.FSM
         }
 
         public void Update()
-        {   
-            UpdateFSM();
+        {
+            if (UseUpdate)
+            {
+                UpdateFSM();
+            }
         }
 
+        /// <summary>
+        /// 开始FSM
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StartFSM(object sender, EventArgs e)
         {
             m_fsm.Start();
@@ -78,6 +97,9 @@ namespace xr.StepByStepFramework.FSM
             m_fsm.Update();
         }
 
+        /// <summary>
+        /// 配置
+        /// </summary>
         private void ConfigureFSM()
         {
             m_fsm = new FSM<FSMState, FSMEvent>();
@@ -87,101 +109,88 @@ namespace xr.StepByStepFramework.FSM
 
             // setup ENTER_STEP state
             m_fsm.SetOnEnter(FSMState.ENTER_STEP, EnterStartStepHandler);
-            m_fsm.SetOnUpdate(FSMState.ENTER_STEP, UpdateStartStepHandler);
+            if (UseUpdate)
+            {
+                m_fsm.SetOnUpdate(FSMState.ENTER_STEP, UpdateStartStepHandler);
+            }
             m_fsm.SetOnExit(FSMState.ENTER_STEP, ExitStartStepHandler);
 
             m_fsm.SetReaction(FSMState.ENTER_STEP, FSMEvent.ENTER_TO_EXECUTE, FSMState.EXECUTE_STEP, null);
 
             // setup EXECUTE_STEP state
             m_fsm.SetOnEnter(FSMState.EXECUTE_STEP, EnterExecuteStepHandler);
-            m_fsm.SetOnUpdate(FSMState.EXECUTE_STEP, UpdateExecuteStepHandler);
+            if (UseUpdate)
+            {
+                m_fsm.SetOnUpdate(FSMState.EXECUTE_STEP, UpdateExecuteStepHandler);
+            }
             m_fsm.SetOnExit(FSMState.EXECUTE_STEP, ExitExecuteStepHandler);
 
             m_fsm.SetReaction(FSMState.EXECUTE_STEP, FSMEvent.EXECUTE_TO_LEAVE, FSMState.LEAVE_STEP, null);
 
             // setup LEAVE_STEP state
             m_fsm.SetOnEnter(FSMState.LEAVE_STEP, EnterLeaveStepHandler);
-            m_fsm.SetOnUpdate(FSMState.LEAVE_STEP, UpdateLeaveStepHandler);
+            if (UseUpdate)
+            {
+                m_fsm.SetOnUpdate(FSMState.LEAVE_STEP, UpdateLeaveStepHandler);
+            }
             m_fsm.SetOnExit(FSMState.LEAVE_STEP, ExitLeaveStepHandler);
 
             m_fsm.SetReaction(FSMState.LEAVE_STEP, FSMEvent.LEAVE_TO_ENTER, FSMState.ENTER_STEP, null);
         }
 
-        [SerializeField]
-        private bool EnterStartStepExecuteComplete = false;
         private void EnterStartStepHandler()
         {
-            bool feedbackExecuteComplete = false;
-            SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(
-                FSMEventConst.ENTER_START_STEP_KEY,
-                new FSMEventFeedbackArg(
-                    () =>
+            SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(FSMEventConst.ENTER_START_STEP_KEY, 
+                new FSMEventStateArg(m_fsm.PreviousState, m_fsm.CurrentState, () =>
                 {
-                    feedbackExecuteComplete = true;
-                    EnterStartStepExecuteComplete = feedbackExecuteComplete;
-                    if (EnterStartStepExecuteComplete)
-                    {
-                        m_fsm.ReactTo(FSMEvent.ENTER_TO_EXECUTE);
-                    }
+                    m_fsm.ReactTo(FSMEvent.ENTER_TO_EXECUTE);
                 }));
         }
-
-        [SerializeField]
-        private bool UpdateStartStepExecuteComplete = false;
         private void UpdateStartStepHandler()
         {
-            bool feedbackExecuteComplete = false;
-            SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(
-                FSMEventConst.UPDATE_START_STEP_KEY,
-                new FSMEventFeedbackArg(
-                    () =>
-                {
-
-                }));
+            SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(FSMEventConst.UPDATE_START_STEP_KEY,
+                new FSMEventStateArg(m_fsm.PreviousState, m_fsm.CurrentState, null));
         }
-
-        [SerializeField]
-        private bool ExitStartStepExecuteComplete = false;
         private void ExitStartStepHandler()
         {
-            SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(FSMEventConst.LEAVE_START_STEP_KEY, new FSMEventArgBase());
+            SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(FSMEventConst.LEAVE_START_STEP_KEY,
+                new FSMEventStateArg(m_fsm.PreviousState, m_fsm.CurrentState, null));
         }
         private void EnterExecuteStepHandler()
         {
-            bool feedbackExecuteComplete = false;
-            //SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(
-            //    FSMEventConst.ENTER_EXECUTE_STEP_KEY,
-            //    new FSMEventFeedbackArg(
-            //        () =>
-            //    {
-            //        feedbackExecuteComplete = true;
-            //        EnterStartStepExecuteComplete = feedbackExecuteComplete;
-            //        if (EnterStartStepExecuteComplete)
-            //        {
-            //            m_fsm.ReactTo(FSMEvent.EXECUTE_TO_LEAVE);
-            //        }
-            //    }));
+            SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(FSMEventConst.LEAVE_START_STEP_KEY,
+                new FSMEventStateArg(m_fsm.PreviousState, m_fsm.CurrentState, () =>
+                {
+                    m_fsm.ReactTo(FSMEvent.EXECUTE_TO_LEAVE);
+                }));
         }
         private void UpdateExecuteStepHandler()
         {
-            SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(FSMEventConst.UPDATE_EXECUTE_STEP_KEY, new FSMEventArgBase());
+            SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(FSMEventConst.UPDATE_EXECUTE_STEP_KEY,
+                new FSMEventStateArg(m_fsm.PreviousState, m_fsm.CurrentState, null));
         }
         private void ExitExecuteStepHandler()
         {
-            SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(FSMEventConst.LEAVE_EXECUTE_STEP_KEY, new FSMEventArgBase());
+            SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(FSMEventConst.LEAVE_EXECUTE_STEP_KEY,
+                new FSMEventStateArg(m_fsm.PreviousState, m_fsm.CurrentState, null));
         }
         private void EnterLeaveStepHandler()
         {
-            SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(FSMEventConst.ENTER_END_STEP_KEY, new FSMEventArgBase());
+            SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(FSMEventConst.ENTER_END_STEP_KEY,
+                new FSMEventStateArg(m_fsm.PreviousState, m_fsm.CurrentState, () =>
+                {
+                    m_fsm.ReactTo(FSMEvent.LEAVE_TO_ENTER);
+                }));
         }
         private void UpdateLeaveStepHandler()
         {
-            SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(FSMEventConst.UPDATE_END_STEP_KEY, new FSMEventArgBase());
+            SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(FSMEventConst.UPDATE_END_STEP_KEY,
+                new FSMEventStateArg(m_fsm.PreviousState, m_fsm.CurrentState, null));
         }
         private void ExitLeaveStepHandler()
         {
-            SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(FSMEventConst.LEAVE_END_STEP_KEY, new FSMEventArgBase());
-
+            SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(FSMEventConst.LEAVE_END_STEP_KEY,
+                new FSMEventStateArg(m_fsm.PreviousState, m_fsm.CurrentState, null));
         }
 
         #region Debug

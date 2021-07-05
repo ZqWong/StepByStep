@@ -17,30 +17,40 @@ public class LinearStepDataManager : SingletonMonoBehaviourClass<LinearStepDataM
 
     private void OnEnable()
     {
-        SingletonProvider<EventManager>.Instance.RegisterEvent(FSMEventConst.LEAVE_END_STEP_KEY, StepMoveNextHandler);
-        SingletonProvider<EventManager>.Instance.RegisterEvent(FSMEventConst.ENTER_START_STEP_KEY, StartStepFeedback);
+        SingletonProvider<EventManager>.Instance.RegisterEvent(FSMEventConst.ENTER_START_STEP_KEY, EnterStartStepHandler);
+        //SingletonProvider<EventManager>.Instance.RegisterEvent(FSMEventConst.UPDATE_START_STEP_KEY, UpdateStartStepHandler)
+        //SingletonProvider<EventManager>.Instance.RegisterEvent(FSMEventConst.LEAVE_START_STEP_KEY, LeaveStartStepHandler);
+        SingletonProvider<EventManager>.Instance.RegisterEvent(FSMEventConst.ENTER_EXECUTE_STEP_KEY, EnterExecuteStepHandler);
+        //SingletonProvider<EventManager>.Instance.RegisterEvent(FSMEventConst.UPDATE_EXECUTE_STEP_KEY, UpdateExecuteStepHandler);
+        //SingletonProvider<EventManager>.Instance.RegisterEvent(FSMEventConst.LEAVE_EXECUTE_STEP_KEY, LeaveExecuteStepHandler);
+        SingletonProvider<EventManager>.Instance.RegisterEvent(FSMEventConst.ENTER_END_STEP_KEY, EnterEndStepHandler);
+        //SingletonProvider<EventManager>.Instance.RegisterEvent(FSMEventConst.UPDATE_END_STEP_KEY, UpdateEndStepHandler);
+        SingletonProvider<EventManager>.Instance.RegisterEvent(FSMEventConst.LEAVE_END_STEP_KEY, LeaveEndStepHandler);
+      
 
         // 监听FeedbackManager状态
         SingletonProvider<EventManager>.Instance.RegisterEvent(FeedbackEventConst.FEEDBACK_STATUS_EVENT_KEY, FeedbackStatusAdjustment);
     }
 
-    private void OnDisable()
+    private void EnterExecuteStepHandler(object sender, EventArgs e)
     {
-        SingletonProvider<EventManager>.Instance.UnRegisterEventHandler(FSMEventConst.LEAVE_END_STEP_KEY, StepMoveNextHandler);
-        SingletonProvider<EventManager>.Instance.UnRegisterEventHandler(FSMEventConst.ENTER_START_STEP_KEY, StartStepFeedback);
-
-        // 监听FeedbackManager状态
-        SingletonProvider<EventManager>.Instance.UnRegisterEventHandler(FeedbackEventConst.FEEDBACK_STATUS_EVENT_KEY, FeedbackStatusAdjustment);
+        throw new NotImplementedException();
     }
 
-    /// <summary>
-    /// 跳转下一步处理
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void StepMoveNextHandler(object sender, EventArgs e)
+    private void OnDisable()
     {
-        StepMoveNext();
+        SingletonProvider<EventManager>.Instance.UnRegisterEventHandler(FSMEventConst.ENTER_START_STEP_KEY, EnterStartStepHandler);
+        //SingletonProvider<EventManager>.Instance.UnRegisterEventHandler(FSMEventConst.UPDATE_START_STEP_KEY, UpdateStartStepHandler);
+        //SingletonProvider<EventManager>.Instance.UnRegisterEventHandler(FSMEventConst.LEAVE_START_STEP_KEY, LeaveStartStepHandler);
+        SingletonProvider<EventManager>.Instance.UnRegisterEventHandler(FSMEventConst.ENTER_EXECUTE_STEP_KEY, EnterExecuteStepHandler);
+        //SingletonProvider<EventManager>.Instance.UnRegisterEventHandler(FSMEventConst.UPDATE_EXECUTE_STEP_KEY, UpdateExecuteStepHandler);
+        //SingletonProvider<EventManager>.Instance.UnRegisterEventHandler(FSMEventConst.LEAVE_EXECUTE_STEP_KEY, LeaveExecuteStepHandler);
+        SingletonProvider<EventManager>.Instance.UnRegisterEventHandler(FSMEventConst.ENTER_END_STEP_KEY, EnterEndStepHandler);
+        //SingletonProvider<EventManager>.Instance.UnRegisterEventHandler(FSMEventConst.UPDATE_END_STEP_KEY, UpdateEndStepHandler);
+        SingletonProvider<EventManager>.Instance.UnRegisterEventHandler(FSMEventConst.LEAVE_END_STEP_KEY, LeaveEndStepHandler);
+        
+        // 监听FeedbackManager状态
+        SingletonProvider<EventManager>.Instance.UnRegisterEventHandler(FeedbackEventConst.FEEDBACK_STATUS_EVENT_KEY, FeedbackStatusAdjustment);
     }
 
     /// <summary>
@@ -48,10 +58,33 @@ public class LinearStepDataManager : SingletonMonoBehaviourClass<LinearStepDataM
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void StartStepFeedback(object sender, EventArgs e)
+    private void EnterStartStepHandler(object sender, EventArgs e)
     {
-        Debug.Log("StartStepFeedback");
-        FeedbackManager.Instance.PlayFeedback();
+        if (e is FSMEventStateArg args)
+        {
+            Debug.Log("EnterStartStepHandler");
+            FeedbackManager.Instance.PlayFeedback(args.ExecuteCompleteCallBack);
+        }
+    }
+
+    /// <summary>
+    /// 开始离开步骤反馈处理
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void EnterEndStepHandler(object sender, EventArgs e)
+    {
+        
+    }
+
+    /// <summary>
+    /// 跳转下一步处理
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void LeaveEndStepHandler(object sender, EventArgs e)
+    {
+        StepMoveNext();
     }
 
     /// <summary>
@@ -61,27 +94,7 @@ public class LinearStepDataManager : SingletonMonoBehaviourClass<LinearStepDataM
     /// <param name="e"></param>
     private void FeedbackStatusAdjustment(object sender, EventArgs e)
     {
-        if (e is FeedbackEventArgs args)
-        {
-            switch (args.StatusType)
-            {
-                case FeedbackEventConst.EventTypes.Play:
-                    break;
 
-                case FeedbackEventConst.EventTypes.Pause:
-                    break;
-
-                case FeedbackEventConst.EventTypes.Resume:
-                    break;
-
-                case FeedbackEventConst.EventTypes.Revert:
-                    break;
-
-                case FeedbackEventConst.EventTypes.Complete:
-                    break;
-
-            }
-        }
     }
 
     /// <summary>
