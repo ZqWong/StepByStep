@@ -56,8 +56,6 @@ namespace xr.StepByStepFramework.FSM
             SingletonProvider<EventManager>.Instance.UnRegisterEventHandler(FSMEventConst.ENABLE_STEP_KEY, StartFSM);
         }
 
-
-
         public void Start()
         {
             ConfigureFSM();
