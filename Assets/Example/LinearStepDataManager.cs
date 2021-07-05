@@ -6,13 +6,16 @@ using System.Collections.Generic;
 using etp.xr.Managers;
 using xr.StepByStepFramework.FSM;
 using System;
+using Assets.Example;
+using xr.StepByStepFramework.Feedback_old;
+using JsonData = LitJson.JsonData;
 
 public class LinearStepDataManager : SingletonMonoBehaviourClass<LinearStepDataManager>, IDataManager
 {
-    [SerializeField]
-    private List<StepDataModel> StepDataCollection;
+    
+    public List<JsonData> StepDataCollection;
 
-    public List<StepDataModel>.Enumerator StepDataEnumerator;
+    public List<JsonData>.Enumerator StepDataEnumerator;
 
     private void OnEnable()
     {
@@ -38,15 +41,14 @@ public class LinearStepDataManager : SingletonMonoBehaviourClass<LinearStepDataM
 
     public void Initialize(JsonData stepJsonData)
     {
-        StepDataCollection = new List<StepDataModel>();
+        StepDataCollection = new List<JsonData>();
 
         foreach (JsonData stepItem in stepJsonData["stepItems"])
         {
-            StepDataCollection.Add(new StepDataModel(stepItem));
+            StepDataCollection.Add(stepItem);
         }
 
         StepDataEnumerator = StepDataCollection.GetEnumerator();
-
         StepMoveNext();
     }
 
@@ -54,7 +56,14 @@ public class LinearStepDataManager : SingletonMonoBehaviourClass<LinearStepDataM
     {
         if (CheckCurrentStepComplete())
         {
-            StepDataEnumerator.MoveNext();
+            if (StepDataEnumerator.MoveNext())
+            {
+                FeedbackManager.Instance.FeedbackFactoryInitialize = 
+                    (jsonData, feedbackType) => 
+                        FeedbackFactory.Instance.GetHandlerByStepType(jsonData, feedbackType);
+
+                FeedbackManager.Instance.InitializeWithNewFeedback(StepDataEnumerator.Current);
+            }
         }
     }
 

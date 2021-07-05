@@ -2,7 +2,7 @@
 using etp.xr.Tools;
 using LitJson;
 
-namespace xr.StepByStep.DataModel
+namespace xr.StepByStepFramework.DataModel
 {
     [Serializable]
     public class BaseParamsDataModel
@@ -15,17 +15,15 @@ namespace xr.StepByStep.DataModel
 
         public bool DeleteFlag;
 
-        public BaseParamsDataModel() { }
-
-        public BaseParamsDataModel(JsonData jdata)
+        public BaseParamsDataModel(JsonData jsonData)
         {
-            Id = jdata.ContainsKey("id") ? jdata["id"].ToString() : "-1";
+            Id = jsonData.ContainsKey("id") ? jsonData["id"].ToString() : "-1";
 
-            CreateTime = jdata.ContainsKey("createTime") ? jdata["createTime"].ToString() : "-1";
+            CreateTime = jsonData.ContainsKey("createTime") ? jsonData["createTime"].ToString() : "-1";
 
-            UpdateTime = jdata.ContainsKey("updateTime") ? jdata["updateTime"].ToString() : "-1";
+            UpdateTime = jsonData.ContainsKey("updateTime") ? jsonData["updateTime"].ToString() : "-1";
 
-            DeleteFlag = jdata.ContainsKey("delFlag") ? jdata["delFlag"].ToString() == "1" ? true : false : true;
+            DeleteFlag = jsonData.ContainsKey("delFlag") ? jsonData["delFlag"].ToString() == "1" ? true : false : true;
         }
     }
 }

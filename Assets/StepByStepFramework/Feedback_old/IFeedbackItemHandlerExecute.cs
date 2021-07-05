@@ -9,8 +9,9 @@ namespace xr.StepByStepFramework.Feedback_old
 {
     public interface IFeedbackItemHandlerExecute
     {
+        void Initialize();
 
-        void Close();
+        void  Close();
 
         void Execute(JsonData data, EventHandler executeCompleteEventHandler);
     }

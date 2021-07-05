@@ -2,10 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Assets.Example;
+using LitJson;
 using NCalc;
 using UnityEngine;
-using xr.StepByStep.DataModel;
+using xr.StepByStepFramework.DataModel;
 using xr.StepByStepFramework.Expressions;
+using xr.StepByStepFramework.Feedback_old;
 
 public class AppManager : MonoBehaviour
 {
@@ -15,10 +17,10 @@ public class AppManager : MonoBehaviour
 
     void Start()
     {
+
         //Debug.Log(LinearStepDataManager.Instance.StepDataEnumerator.Current.Id);
 
-
-        FeedContentAnim var = new FeedContentAnim(this.gameObject, new FeedbackDataModelBase());
+        //FeedContentAnim var = new FeedContentAnim(this.gameObject, new FeedbackDataModelBase());
 
         //Expression e = new Expression("2 + 3 * 5");
         //object result = e.Evaluate();
@@ -43,7 +45,7 @@ public class AppManager : MonoBehaviour
         //ExpressionManager.Instance.CreateExpression("Plus", Max);
 
         //var ret = ExpressionManager.Instance.ExecuteExpression("Plus", "Plus(1, 2)");
-        
+
         //Debug.Log(ret);
     }
 

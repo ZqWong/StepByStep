@@ -1,12 +1,20 @@
 ﻿using System;
 using LitJson;
 using UnityEngine;
-using xr.StepByStep.DataModel;
+using xr.StepByStepFramework.DataModel;
 
 namespace xr.StepByStepFramework.Feedback_old
 {
-    public abstract class FeedbackItemHandlerContentBase
+    public abstract class FeedbackItemHandlerContentBase : MonoBehaviour
     {
+        /// <summary>
+        /// 是否生效
+        /// </summary>
+        public bool Active = true;
+        /// <summary>
+        /// 时间设置
+        /// </summary>
+        public FeedbackTiming Timing;
         /// <summary>
         /// 反馈标识
         /// </summary>
@@ -24,25 +32,65 @@ namespace xr.StepByStepFramework.Feedback_old
         /// </summary>
         public bool IsComplete { get; set; }
 
+        ///// <summary>
+        ///// 当前反馈处理逻辑
+        ///// </summary>
+        //protected IFeedbackItemHandlerExecute m_handler;
+
         /// <summary>
-        /// 当前反馈处理逻辑
+        /// 持续时间，用于显示其进度条，意味着每个反馈都会被有意义的数据覆盖(如果需要获取准确的时间请重写此方法)
         /// </summary>
-        protected IFeedbackItemHandlerExecute m_handler;
+        public virtual float FeedbackDuration { get { return 0f; } set { } }
 
+        /// <summary>
+        /// The total duration of this feedback :
+        /// total = initial delay + duration * (number of repeats + delay between repeats)
+        /// 此反馈的总持续时间：
+        /// 总计 = 初始延迟 + 持续时间 *（重复次数 + 重复之间的延迟）
+        /// </summary>
+        public float TotalDuration
+        {
+            get
+            {
+                float totalTime = 0f;
 
-        protected FeedbackItemHandlerContentBase() { }
+                if (Timing == null)
+                {
+                    return 0f;
+                }
+
+                if (Timing.InitialDelay != 0)
+                {
+                    totalTime += ApplyTimeMultiplier(Timing.InitialDelay);
+                }
+
+                totalTime += FeedbackDuration;
+
+                if (Timing.NumberOfRepeats != 0)
+                {
+                    float delayBetweenRepeats = ApplyTimeMultiplier(Timing.DelayBetweenRepeats);
+
+                    totalTime += Timing.NumberOfRepeats * (FeedbackDuration + delayBetweenRepeats);
+                }
+
+                return totalTime;
+            }
+        }
+
+        public virtual void Initialize() { }
+
         /// <summary>
         /// 构造函数设置初始类型, 
         /// </summary>
         /// <param name="owner"></param>
         /// <param name="dataModel"></param>
-        protected FeedbackItemHandlerContentBase(GameObject owner, FeedbackDataModelBase dataModel)
+        public virtual void Initialize (FeedbackDataModelBase dataModel)
         {
             FeedbackType = dataModel.FeedbackType;
-            CustomInitialization(owner, dataModel);
+            CustomInitialization(dataModel);
         }
 
-        protected abstract void CustomInitialization(GameObject owner, FeedbackDataModelBase dataModel);
+        protected abstract void CustomInitialization(FeedbackDataModelBase dataModel);
 
         public virtual void Execute(JsonData data, EventHandler executeCompletedEventHandler)
         {
@@ -53,16 +101,19 @@ namespace xr.StepByStepFramework.Feedback_old
                 CustomPlayCompeteCallback();
             };
 
-            m_handler?.Execute(data, executeCompletedEventHandler);
+            CustomExecuteHandler();
         }
 
-        protected virtual void CustomPlayCompeteCallback() { }
+        protected abstract void CustomPlayCompeteCallback();
 
-        public virtual void Close()
+        protected abstract void CustomExecuteHandler();
+
+        #region Helper
+        private float ApplyTimeMultiplier(float duration)
         {
-            m_handler?.Close();
+            return duration * FeedbackManager.Instance.DurationMultiplier;
         }
 
+        #endregion
     }
-
 }

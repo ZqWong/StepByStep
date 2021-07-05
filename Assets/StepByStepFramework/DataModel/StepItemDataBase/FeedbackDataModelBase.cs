@@ -1,22 +1,20 @@
 ﻿using System;
 using LitJson;
-using xr.StepByStep.DataModel;
 
-namespace xr.StepByStep.DataModel
+namespace xr.StepByStepFramework.DataModel
 {
     [Serializable]
     public class FeedbackDataModelBase : BaseParamsDataModel
     {
-        public FeedbackDataModelBase() { }
-
         public string FeedbackType { get; set; }
 
+        public string Params { get; set; }
 
-        public FeedbackDataModelBase(JsonData jdata) : base(jdata)
+        public FeedbackDataModelBase(JsonData jsonData, string feedbackTypeKey = "feedbackType", string paramsKey = "params") : base(jsonData)
         {
-            var str = jdata["FeedbackType"].ToString() == null ? "NONE" : jdata["FeedbackType"].ToString();
+            FeedbackType = jsonData[feedbackTypeKey].ToString() == null ? "NONE" : jsonData[feedbackTypeKey].ToString();
 
-
+            Params = jsonData[paramsKey].ToString() == null ? "NONE" : jsonData[paramsKey].ToString();
         }
     }
 }
