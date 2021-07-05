@@ -24,7 +24,7 @@ namespace xr.StepByStepFramework.FSM
 
         public FSMEventFeedbackArg(Action callback = null) : base(callback)
         {            
-            callback?.Invoke();
+            //callback?.Invoke();
         }
     }
 }

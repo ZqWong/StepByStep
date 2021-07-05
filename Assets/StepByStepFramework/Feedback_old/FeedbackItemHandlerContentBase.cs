@@ -42,6 +42,8 @@ namespace xr.StepByStepFramework.Feedback_old
         /// </summary>
         public virtual float FeedbackDuration { get { return 0f; } set { } }
 
+        protected FeedbackDataModelBase FeedbackDataModel { get; private set; }
+
         /// <summary>
         /// The total duration of this feedback :
         /// total = initial delay + duration * (number of repeats + delay between repeats)
@@ -87,26 +89,21 @@ namespace xr.StepByStepFramework.Feedback_old
         public virtual void Initialize (FeedbackDataModelBase dataModel)
         {
             FeedbackType = dataModel.FeedbackType;
-            CustomInitialization(dataModel);
+            FeedbackDataModel = dataModel;
+            CustomInitialization(FeedbackDataModel);
         }
 
         protected abstract void CustomInitialization(FeedbackDataModelBase dataModel);
 
-        public virtual void Execute(JsonData data, EventHandler executeCompletedEventHandler)
+        public virtual void Execute(EventHandler executeCompletedEventHandler)
         {
-            executeCompletedEventHandler += (object sender, EventArgs args) =>
-            {
-                IsComplete = true; 
-                PlayComplete?.Invoke(this, EventArgs.Empty);
-                CustomPlayCompeteCallback();
-            };
-
-            CustomExecuteHandler();
+            PlayComplete = executeCompletedEventHandler;
+            CustomExecuteHandler(FeedbackDataModel);
         }
 
-        protected abstract void CustomPlayCompeteCallback();
+        protected abstract void CustomPlayCompeteCallback(FeedbackDataModelBase dataModel);
 
-        protected abstract void CustomExecuteHandler();
+        protected abstract void CustomExecuteHandler(FeedbackDataModelBase dataModel);
 
         #region Helper
         private float ApplyTimeMultiplier(float duration)

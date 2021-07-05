@@ -61,7 +61,7 @@ namespace xr.StepByStepFramework.FSM
         public void Start()
         {
             ConfigureFSM();
-            StartFSM(this, null);
+            //StartFSM(this, null);
             m_initialized = true;
         }
 
@@ -115,7 +115,7 @@ namespace xr.StepByStepFramework.FSM
         {
             bool feedbackExecuteComplete = false;
             SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(
-                FSMEventConst.ENTER_START_STEP_KEY, 
+                FSMEventConst.ENTER_START_STEP_KEY,
                 new FSMEventFeedbackArg(
                     () =>
                 {
@@ -151,18 +151,18 @@ namespace xr.StepByStepFramework.FSM
         private void EnterExecuteStepHandler()
         {
             bool feedbackExecuteComplete = false;
-            SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(
-                FSMEventConst.ENTER_EXECUTE_STEP_KEY,
-                new FSMEventFeedbackArg(
-                    () =>
-                {
-                    feedbackExecuteComplete = true;
-                    EnterStartStepExecuteComplete = feedbackExecuteComplete;
-                    if (EnterStartStepExecuteComplete)
-                    {
-                        m_fsm.ReactTo(FSMEvent.EXECUTE_TO_LEAVE);
-                    }
-                }));
+            //SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(
+            //    FSMEventConst.ENTER_EXECUTE_STEP_KEY,
+            //    new FSMEventFeedbackArg(
+            //        () =>
+            //    {
+            //        feedbackExecuteComplete = true;
+            //        EnterStartStepExecuteComplete = feedbackExecuteComplete;
+            //        if (EnterStartStepExecuteComplete)
+            //        {
+            //            m_fsm.ReactTo(FSMEvent.EXECUTE_TO_LEAVE);
+            //        }
+            //    }));
         }
         private void UpdateExecuteStepHandler()
         {

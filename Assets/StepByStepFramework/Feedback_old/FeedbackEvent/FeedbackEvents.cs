@@ -15,11 +15,11 @@ namespace xr.StepByStepFramework.Feedback_old
         /// <summary>
         /// 是否需要触发事件
         /// </summary>
-        public bool TriggerFeedbackEvents = false;
+        public bool TriggerFeedbackEvents = true;
         /// <summary>
         /// 是否触发UnityEvent事件
         /// </summary>
-        public bool TriggerUnityEvents = true;
+        public bool TriggerUnityEvents = false;
 
         public UnityEvent OnPlay;
         public UnityEvent OnPause;
@@ -47,6 +47,8 @@ namespace xr.StepByStepFramework.Feedback_old
 
         public virtual void TriggerOnPlay()
         {
+            OnPlayIsNull = OnPlay == null;
+
             if (!OnPlayIsNull && TriggerUnityEvents)
             {
                 OnPlay.Invoke();
@@ -62,6 +64,8 @@ namespace xr.StepByStepFramework.Feedback_old
 
         public virtual void TriggerOnPause()
         {
+            OnPauseIsNull = OnPause == null;
+
             if (!OnPauseIsNull && TriggerUnityEvents)
             {
                 OnPause.Invoke();
@@ -77,6 +81,8 @@ namespace xr.StepByStepFramework.Feedback_old
 
         public virtual void TriggerOnResume()
         {
+            OnResumeIsNull = OnResume == null;
+
             if (!OnResumeIsNull && TriggerUnityEvents)
             {
                 OnResume.Invoke();
@@ -92,6 +98,8 @@ namespace xr.StepByStepFramework.Feedback_old
 
         public virtual void TriggerOnRevert()
         {
+            OnRevertIsNull = OnRevert == null;
+
             if (!OnRevertIsNull && TriggerUnityEvents)
             {
                 OnRevert.Invoke();
@@ -107,6 +115,8 @@ namespace xr.StepByStepFramework.Feedback_old
 
         public virtual void TriggerOnComplete()
         {
+            OnCompleteIsNull = OnComplete == null;
+
             if (!OnCompleteIsNull && TriggerUnityEvents)
             {
                 OnComplete.Invoke();

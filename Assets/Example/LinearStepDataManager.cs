@@ -8,11 +8,9 @@ using xr.StepByStepFramework.FSM;
 using System;
 using Assets.Example;
 using xr.StepByStepFramework.Feedback_old;
-using JsonData = LitJson.JsonData;
 
 public class LinearStepDataManager : SingletonMonoBehaviourClass<LinearStepDataManager>, IDataManager
 {
-    
     public List<JsonData> StepDataCollection;
 
     public List<JsonData>.Enumerator StepDataEnumerator;
@@ -20,11 +18,13 @@ public class LinearStepDataManager : SingletonMonoBehaviourClass<LinearStepDataM
     private void OnEnable()
     {
         SingletonProvider<EventManager>.Instance.RegisterEvent(FSMEventConst.LEAVE_END_STEP_KEY, StepMoveNextHandler);
+        SingletonProvider<EventManager>.Instance.RegisterEvent(FSMEventConst.ENTER_START_STEP_KEY, StartStepFeedback);
     }
 
     private void OnDisable()
     {
         SingletonProvider<EventManager>.Instance.UnRegisterEventHandler(FSMEventConst.LEAVE_END_STEP_KEY, StepMoveNextHandler);
+        SingletonProvider<EventManager>.Instance.UnRegisterEventHandler(FSMEventConst.ENTER_START_STEP_KEY, StartStepFeedback);
     }
 
     private void StepMoveNextHandler(object sender, EventArgs e)
@@ -32,11 +32,22 @@ public class LinearStepDataManager : SingletonMonoBehaviourClass<LinearStepDataM
         StepMoveNext();
     }
 
+    private void StartStepFeedback(object sender, EventArgs e)
+    {
+        Debug.Log("StartStepFeedback");
+        FeedbackManager.Instance.PlayFeedback();
+    }
+
     private void Awake()
     {
         JsonData jsonData = JsonTool.GetJsonData(Application.streamingAssetsPath + "/StepDataTest.json");
         Debug.Log("jsonString :" + JsonMapper.ToJson(jsonData));
         Initialize(jsonData);
+    }
+
+    public void OnClickStart()
+    {
+        SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(FSMEventConst.ENABLE_STEP_KEY, null);
     }
 
     public void Initialize(JsonData stepJsonData)
@@ -47,6 +58,8 @@ public class LinearStepDataManager : SingletonMonoBehaviourClass<LinearStepDataM
         {
             StepDataCollection.Add(stepItem);
         }
+
+        Debug.Log("StepDataCollection.count :" + StepDataCollection.Count);
 
         StepDataEnumerator = StepDataCollection.GetEnumerator();
         StepMoveNext();

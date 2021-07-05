@@ -151,7 +151,18 @@ namespace xr.StepByStepFramework.Feedback_old
 
         public void  PlayFeedback()
         {
-
+            Events.TriggerOnPlay();
+            foreach (var feedback in FeedbackCollection)
+            {
+                feedback.Execute(((sender, args) =>
+                {
+                    if(FeedbackCollection.All(f =>{return f.IsComplete = true;}))
+                    {
+                        Debug.Log("All Complete");
+                        Events.TriggerOnComplete();
+                    }
+                }));
+            }
         }
 
     }

@@ -14,17 +14,31 @@ namespace Assets.Example
     {
         protected override void CustomInitialization(FeedbackDataModelBase dataModel)
         {
-            
+            Debug.Log("CustomInitialization :" + dataModel.FeedbackType);
         }
 
-        protected override void CustomPlayCompeteCallback()
+        protected override void CustomPlayCompeteCallback(FeedbackDataModelBase dataModel)
         {
-            
+            IsComplete = true;
+            PlayComplete?.Invoke(this, EventArgs.Empty);
         }
 
-        protected override void CustomExecuteHandler()
+        protected override void CustomExecuteHandler(FeedbackDataModelBase dataModel)
         {
+            Debug.Log("CustomExecuteHandler :" + dataModel.FeedbackType);
+        }
 
+        public void OnClickAnimComplete()
+        {
+            CustomPlayCompeteCallback(FeedbackDataModel);
+        }
+
+        void OnGUI()
+        {
+            if (GUILayout.Button("AnimConplete"))
+            {
+                OnClickAnimComplete();
+            }
         }
     }
 }
