@@ -9,10 +9,18 @@ using etp.xr.Tools;
 
 namespace xr.StepByStepFramework.Expressions
 {
+    /// <summary>
+    /// 表达式管理器
+    /// </summary>
     public class ExpressionManager : SingletonMonoBehaviourClass<ExpressionManager>
     {
         public Dictionary<string, ExpressionTemplate> ExpressionCollection = new Dictionary<string, ExpressionTemplate>();
 
+        /// <summary>
+        /// 创建表达式
+        /// </summary>
+        /// <param name="expressionKey"></param>
+        /// <param name="expression"></param>
         public void CreateExpression(string expressionKey, EvaluateFunctionHandler expression)
         {
             // 支持一个表达式执行多个响应函数， 如果多个响应函数有返回值，则得到的值是最后一个执行的响应函数所得。
@@ -27,6 +35,12 @@ namespace xr.StepByStepFramework.Expressions
             }            
         }
 
+        /// <summary>
+        /// 表达式执行
+        /// </summary>
+        /// <param name="expressionKey"></param>
+        /// <param name="expressionStr"></param>
+        /// <returns></returns>
         public object ExecuteExpression(string expressionKey, string expressionStr)
         {
             Debug.Assert(ExpressionCollection.ContainsKey(expressionKey), $"Can't find target expression key ( {expressionKey} ) in Expression collection!");
@@ -34,10 +48,20 @@ namespace xr.StepByStepFramework.Expressions
         }
     }
 
+    /// <summary>
+    /// 表达式moban
+    /// </summary>
     public class ExpressionTemplate
     {
+        /// <summary>
+        /// 表达式列表KEY
+        /// </summary>
         public string ExpressionKey { get; private set; }
+        /// <summary>
+        /// 表达式内容
+        /// </summary>
         public string ExpressionStr { get; private set; }
+
         public EvaluateFunctionHandler EvaluateFunction { get; set; }
 
         public ExpressionTemplate() { }
@@ -48,6 +72,11 @@ namespace xr.StepByStepFramework.Expressions
             EvaluateFunction += Expression;
         }
 
+        /// <summary>
+        /// 表达式运行
+        /// </summary>
+        /// <param name="expressionStr"></param>
+        /// <returns></returns>
         public object RunExpression(string expressionStr)
         {
             Expression e = new Expression(expressionStr);

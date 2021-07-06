@@ -4,6 +4,10 @@ using LitJson;
 
 namespace xr.StepByStepFramework.DataModel
 {
+    /// <summary>
+    /// 服务端基础字段基类
+    /// 包含字段 id（string），createTime（string），updateTime（string），delFlag（bool）
+    /// </summary>
     [Serializable]
     public class BaseParamsDataModel
     {

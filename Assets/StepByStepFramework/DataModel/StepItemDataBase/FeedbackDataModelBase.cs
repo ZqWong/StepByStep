@@ -3,6 +3,10 @@ using LitJson;
 
 namespace xr.StepByStepFramework.DataModel
 {
+    /// <summary>
+    /// Feedback数据基类
+    /// 包含字段：feedbackType（string），params（string）
+    /// </summary>
     [Serializable]
     public class FeedbackDataModelBase : BaseParamsDataModel
     {

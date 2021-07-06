@@ -36,8 +36,14 @@ namespace xr.StepByStepFramework.FSM
 
         #region public variables
 
+        /// <summary>
+        /// FSM 当前状态
+        /// </summary>
         public FSMState CurrentState => m_fsm.CurrentState;
 
+        /// <summary>
+        /// 是否启用Update
+        /// </summary>
         public bool UseUpdate { get; set; }
 
         /// <summary>
@@ -56,11 +62,13 @@ namespace xr.StepByStepFramework.FSM
 
         void OnEnable()
         {
+            // 开始监听步骤处理启动事件
             SingletonProvider<EventManager>.Instance.RegisterEvent(FSMEventConst.ENABLE_STEP_KEY, StartFSM);
         }
 
         void OnDisable()
         {
+            // 结束监听步骤处理启动事件
             SingletonProvider<EventManager>.Instance.UnRegisterEventHandler(FSMEventConst.ENABLE_STEP_KEY, StartFSM);
         }
         

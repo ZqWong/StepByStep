@@ -9,6 +9,12 @@ namespace xr.StepByStepFramework.Feedback_old
 {
     public interface IFeedbackItemHandlerFactory
     {
-        FeedbackItemHandlerContentBase GetHandlerByStepType(JsonData jsonData, string stepType);
+        /// <summary>
+        /// 以工厂模式完善逻辑
+        /// </summary>
+        /// <param name="jsonData">JsonData</param>
+        /// <param name="feedbackType">数据中feedback类型</param>
+        /// <returns></returns>
+        FeedbackItemHandlerContentBase GetHandlerByStepType(JsonData jsonData, string feedbackType);
     }
 }

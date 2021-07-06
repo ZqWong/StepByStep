@@ -10,6 +10,9 @@ namespace xr.StepByStepFramework.FSM
 {
     public class FSMEventArgBase : EventArgs
     {
+        /// <summary>
+        /// 处理完成回调
+        /// </summary>
         public Action ExecuteCompleteCallBack;
 
         public FSMEventArgBase() { }
@@ -20,10 +23,19 @@ namespace xr.StepByStepFramework.FSM
         }
     }
 
+    /// <summary>
+    /// FSM 状态变更事件
+    /// </summary>
     public class FSMEventStateArg : FSMEventArgBase
     {
+        /// <summary>
+        /// 变更前的状态
+        /// </summary>
         public StepFSMManager.FSMState PreState;
 
+        /// <summary>
+        /// 变更后的装填
+        /// </summary>
         public StepFSMManager.FSMState CurrentState;
 
         public FSMEventStateArg(StepFSMManager.FSMState pre, StepFSMManager.FSMState current, Action callback) : base(callback)

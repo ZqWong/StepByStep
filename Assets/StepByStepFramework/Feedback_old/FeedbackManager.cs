@@ -48,7 +48,6 @@ namespace xr.StepByStepFramework.Feedback_old
         /// </summary>
         public float FeedbacksIntensity = 1f;
 
-
         /// <summary>
         /// 各个阶段触发的事件
         /// </summary>
@@ -66,7 +65,7 @@ namespace xr.StepByStepFramework.Feedback_old
         public bool IsPlaying { get; protected set; }
 
         /// <summary>
-        /// 此 Feedbacks 中所有活动反馈的总持续时间（以秒为单位）
+        /// 此 Feedbacks 中所有活动反馈的总持续时间（以秒为单位），每一个feedback赋予了正确的时间长度是前提
         /// </summary>
         public float TotalDuration
         {
@@ -111,13 +110,14 @@ namespace xr.StepByStepFramework.Feedback_old
         /// <summary>
         /// 初始化步骤反馈信息，先对 FeedbackFactoryInitialize 进行处理
         /// </summary>
-        /// <param name="jsonData"></param>
-        /// <param name="feedbacksKey"></param>
-        /// <param name="feedbackTypeKey"></param>
+        /// <param name="jsonData">JsonData</param>
+        /// <param name="feedbacksKey">数据中反馈组的头字段</param>
+        /// <param name="feedbackTypeKey">数据中反馈类型的头字段</param>
         public void InitializeWithNewFeedback(JsonData jsonData, string feedbacksKey = "feedbacks", string feedbackTypeKey = "feedbackType")
         {
             IsPlaying = false;
 
+            // 获取Feedback全局的一些设置，如果有的话
             DurationMultiplier = jsonData.ContainsKey("durationMultiplier")
                 ? jsonData["durationMultiplier"].ToFloat()
                 : 1f;
@@ -133,6 +133,7 @@ namespace xr.StepByStepFramework.Feedback_old
 
             FeedbackCollection.Clear();
 
+            // 将原来的feedback删除
             if (FeedbackCollection.Count > 0)
             {
                 foreach (FeedbackItemHandlerContentBase component in FeedbackCollection)
@@ -141,6 +142,7 @@ namespace xr.StepByStepFramework.Feedback_old
                 }
             }
 
+            // FeedbackFactoryInitialize 已经初始化完毕，对用户自定义的处理进行工厂处理，并添加到FeedbackCollection中
             foreach (JsonData data in jsonData[feedbacksKey])
             {
                 var feedbackComponent = FeedbackFactoryInitialize?.Invoke(data, feedbackTypeKey);

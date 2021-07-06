@@ -13,10 +13,10 @@ namespace Assets.Example
 {
     public class FeedbackFactory : SingletonMonoBehaviourClass<FeedbackFactory>, IFeedbackItemHandlerFactory
     {
-        public FeedbackItemHandlerContentBase GetHandlerByStepType(JsonData jsonData, string stepType = "feedbackType")
+        public FeedbackItemHandlerContentBase GetHandlerByStepType(JsonData jsonData, string feedbackType = "feedbackType")
         {
             FeedbackItemHandlerContentBase ret = null;
-            switch (jsonData[stepType].ToString())
+            switch (jsonData[feedbackType].ToString())
             {
                 case "Anim":
 

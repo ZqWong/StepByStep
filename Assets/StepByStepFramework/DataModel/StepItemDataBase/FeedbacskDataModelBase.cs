@@ -7,6 +7,9 @@ using LitJson;
 
 namespace xr.StepByStepFramework.DataModel
 {
+    /// <summary>
+    /// Feedback组数据基类
+    /// </summary>
     //[System.Serializable]
     public class FeedbacskDataModelBase : BaseParamsDataModel
     {

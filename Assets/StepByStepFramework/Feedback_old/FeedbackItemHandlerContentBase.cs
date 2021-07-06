@@ -31,19 +31,14 @@ namespace xr.StepByStepFramework.Feedback_old
         /// 当前反馈是否完成
         /// </summary>
         public bool IsComplete { get; set; }
-
-        ///// <summary>
-        ///// 当前反馈处理逻辑
-        ///// </summary>
-        //protected IFeedbackItemHandlerExecute m_handler;
-
         /// <summary>
         /// 持续时间，用于显示其进度条，意味着每个反馈都会被有意义的数据覆盖(如果需要获取准确的时间请重写此方法)
         /// </summary>
         public virtual float FeedbackDuration { get { return 0f; } set { } }
-
+        /// <summary>
+        /// 反馈的基础数据模型
+        /// </summary>
         protected FeedbackDataModelBase FeedbackDataModel { get; private set; }
-
         /// <summary>
         /// The total duration of this feedback :
         /// total = initial delay + duration * (number of repeats + delay between repeats)
@@ -93,23 +88,44 @@ namespace xr.StepByStepFramework.Feedback_old
             CustomInitialization(FeedbackDataModel);
         }
 
+        /// <summary>
+        /// 自定义初始化
+        /// </summary>
+        /// <param name="dataModel"></param>
         protected abstract void CustomInitialization(FeedbackDataModelBase dataModel);
 
+        /// <summary>
+        /// 反馈执行处理
+        /// </summary>
+        /// <param name="executeCompletedEventHandler"></param>
         public virtual void Execute(EventHandler executeCompletedEventHandler)
         {
             PlayComplete = executeCompletedEventHandler;
             CustomExecuteHandler(FeedbackDataModel);
         }
 
+        /// <summary>
+        /// 自定义执行反比毁掉
+        /// </summary>
         protected virtual void CustomPlayCompeteCallback()
         {
             IsComplete = true;
             PlayComplete?.Invoke(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// 自定义执行逻辑
+        /// </summary>
+        /// <param name="dataModel"></param>
         protected abstract void CustomExecuteHandler(FeedbackDataModelBase dataModel);
 
         #region Helper
+
+        /// <summary>
+        /// 根据反馈的时间流速获取具体长度
+        /// </summary>
+        /// <param name="duration"></param>
+        /// <returns></returns>
         private float ApplyTimeMultiplier(float duration)
         {
             return duration * FeedbackManager.Instance.DurationMultiplier;
