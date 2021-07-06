@@ -14,13 +14,14 @@ namespace Assets.Example
     {
         protected override void CustomInitialization(FeedbackDataModelBase dataModel)
         {
-            Debug.Log("CustomInitialization :" + dataModel.FeedbackType);
+            var data = dataModel as FeedbackDataModel;
+            Debug.Log("CustomInitialization :" + dataModel.FeedbackType + " data.Owner " + data.Owner);
         }
 
-        protected override void CustomPlayCompeteCallback(FeedbackDataModelBase dataModel)
+        protected override void CustomPlayCompeteCallback()
         {
-            IsComplete = true;
-            PlayComplete?.Invoke(this, EventArgs.Empty);
+            base.CustomPlayCompeteCallback();
+            Debug.Log("CustomPlayCompeteCallback");
         }
 
         protected override void CustomExecuteHandler(FeedbackDataModelBase dataModel)
@@ -30,7 +31,7 @@ namespace Assets.Example
 
         public void OnClickAnimComplete()
         {
-            CustomPlayCompeteCallback(FeedbackDataModel);
+            CustomPlayCompeteCallback();
         }
 
         void OnGUI()

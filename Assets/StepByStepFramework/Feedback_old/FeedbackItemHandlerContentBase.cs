@@ -101,7 +101,11 @@ namespace xr.StepByStepFramework.Feedback_old
             CustomExecuteHandler(FeedbackDataModel);
         }
 
-        protected abstract void CustomPlayCompeteCallback(FeedbackDataModelBase dataModel);
+        protected virtual void CustomPlayCompeteCallback()
+        {
+            IsComplete = true;
+            PlayComplete?.Invoke(this, EventArgs.Empty);
+        }
 
         protected abstract void CustomExecuteHandler(FeedbackDataModelBase dataModel);
 

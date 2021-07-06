@@ -32,11 +32,6 @@ public class LinearStepDataManager : SingletonMonoBehaviourClass<LinearStepDataM
         SingletonProvider<EventManager>.Instance.RegisterEvent(FeedbackEventConst.FEEDBACK_STATUS_EVENT_KEY, FeedbackStatusAdjustment);
     }
 
-    private void EnterExecuteStepHandler(object sender, EventArgs e)
-    {
-        throw new NotImplementedException();
-    }
-
     private void OnDisable()
     {
         SingletonProvider<EventManager>.Instance.UnRegisterEventHandler(FSMEventConst.ENTER_START_STEP_KEY, EnterStartStepHandler);
@@ -66,6 +61,12 @@ public class LinearStepDataManager : SingletonMonoBehaviourClass<LinearStepDataM
             FeedbackManager.Instance.PlayFeedback(args.ExecuteCompleteCallBack);
         }
     }
+
+    private void EnterExecuteStepHandler(object sender, EventArgs e)
+    {
+
+    }
+
 
     /// <summary>
     /// 开始离开步骤反馈处理
@@ -131,6 +132,18 @@ public class LinearStepDataManager : SingletonMonoBehaviourClass<LinearStepDataM
         Debug.Log("StepDataCollection.count :" + StepDataCollection.Count);
 
         StepDataEnumerator = StepDataCollection.GetEnumerator();
+        FeedbackInit();
+    }
+
+    /// <summary>
+    /// 反馈初始化
+    /// </summary>
+    private void FeedbackInit()
+    {
+        FeedbackManager.Instance.FeedbackFactoryInitialize =
+            (jsonData, feedbackType) =>
+                FeedbackFactory.Instance.GetHandlerByStepType(jsonData, feedbackType);
+
         StepMoveNext();
     }
 
@@ -143,10 +156,6 @@ public class LinearStepDataManager : SingletonMonoBehaviourClass<LinearStepDataM
         {
             if (StepDataEnumerator.MoveNext())
             {
-                FeedbackManager.Instance.FeedbackFactoryInitialize = 
-                    (jsonData, feedbackType) => 
-                        FeedbackFactory.Instance.GetHandlerByStepType(jsonData, feedbackType);
-
                 FeedbackManager.Instance.InitializeWithNewFeedback(StepDataEnumerator.Current);
             }
         }
