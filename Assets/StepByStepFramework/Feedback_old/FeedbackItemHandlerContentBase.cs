@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using LitJson;
 using UnityEngine;
 using xr.StepByStepFramework.DataModel;
@@ -11,6 +12,11 @@ namespace xr.StepByStepFramework.Feedback_old
         /// 是否生效
         /// </summary>
         public bool Active = true;
+        /// <summary>
+        /// 触发几率
+        /// </summary>
+        [Range(0, 100)]
+        public int Chance = 100;
         /// <summary>
         /// 时间设置
         /// </summary>
@@ -39,6 +45,18 @@ namespace xr.StepByStepFramework.Feedback_old
         /// 反馈的基础数据模型
         /// </summary>
         protected FeedbackDataModelBase FeedbackDataModel { get; private set; }
+        /// <summary>
+        /// 无限循环播放协程
+        /// </summary>
+        protected Coroutine m_infinitePlayCoroutine;
+        /// <summary>
+        /// 有限循环播放协程
+        /// </summary>
+        protected Coroutine m_repeatedPlayCoroutine;
+        /// <summary>
+        /// 重复播放次数
+        /// </summary>
+        protected int m_playsLeft;
         /// <summary>
         /// The total duration of this feedback :
         /// total = initial delay + duration * (number of repeats + delay between repeats)
@@ -100,8 +118,96 @@ namespace xr.StepByStepFramework.Feedback_old
         /// <param name="executeCompletedEventHandler"></param>
         public virtual void Execute(EventHandler executeCompletedEventHandler)
         {
+            if (Timing.InitialDelay > 0f)
+            {
+                StartCoroutine(ExecuteCoroutine(executeCompletedEventHandler));
+            }
+            else
+            {
+                RegularPlay(FeedbackDataModel);
+            }
+        }
+
+        private IEnumerator ExecuteCoroutine(EventHandler executeCompletedEventHandler)
+        {
+            if (Timing.TimescaleMode == TimescaleModes.Scaled)
+            {
+                yield return FeedbacksCoroutine.WaitFor(Timing.InitialDelay);
+            }
+            else
+            {
+                yield return FeedbacksCoroutine.WaitForUnscaled(Timing.InitialDelay);
+            }
             PlayComplete = executeCompletedEventHandler;
-            CustomExecuteHandler(FeedbackDataModel);
+            //CustomExecuteHandler(FeedbackDataModel);
+            RegularPlay(FeedbackDataModel);
+        }
+
+        private void RegularPlay(FeedbackDataModelBase dataModel)
+        {
+            // 分析触发几率
+            if (Chance == 0f)
+            {
+                return;
+            }
+            if (Chance != 100f)
+            {
+                Chance = Mathf.Clamp(Chance, 0, 100);
+                // determine the odds
+                float random = UnityEngine.Random.Range(0f, 100f);
+                if (random > Chance)
+                {
+                    return;
+                }
+            }
+
+            // 是否开启无限循环
+            if (Timing.RepeatForever)
+            {
+                m_infinitePlayCoroutine = StartCoroutine(InfinitePlay(dataModel));
+                return;
+            }
+
+            // 是否启用了有限循环播放
+            if (Timing.NumberOfRepeats > 0)
+            {
+                m_repeatedPlayCoroutine = StartCoroutine(RepeatedPlay(dataModel));
+                return;
+            }
+        }
+
+        private IEnumerator InfinitePlay(FeedbackDataModelBase dataModel)
+        {
+            while (true)
+            {
+                CustomExecuteHandler(dataModel);
+                if (Timing.TimescaleMode == TimescaleModes.Scaled)
+                {
+                    yield return FeedbacksCoroutine.WaitFor(Timing.DelayBetweenRepeats);
+                }
+                else
+                {
+                    yield return FeedbacksCoroutine.WaitForUnscaled(Timing.DelayBetweenRepeats);
+                }
+            }
+        }
+
+        private IEnumerator RepeatedPlay(FeedbackDataModelBase dataModel)
+        {
+            while (m_playsLeft > 0)
+            {
+                m_playsLeft--;
+                CustomExecuteHandler(dataModel);
+                if (Timing.TimescaleMode == TimescaleModes.Scaled)
+                {
+                    yield return FeedbacksCoroutine.WaitFor(Timing.DelayBetweenRepeats);
+                }
+                else
+                {
+                    yield return FeedbacksCoroutine.WaitForUnscaled(Timing.DelayBetweenRepeats);
+                }
+            }
+            m_playsLeft = Timing.NumberOfRepeats + 1;
         }
 
         /// <summary>
