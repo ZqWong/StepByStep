@@ -262,5 +262,16 @@ namespace xr.StepByStepFramework.Feedback
         }
 
         #endregion
+
+//#if UNITY_EDITOR
+//        void Start()
+//        {
+//            if (Keyboard.current.pauseKey.wasPressedThisFrame)
+//            {
+//                CustomPlayCompeteCallback();
+//            }
+//        }
+//#endif
+
     }
 }

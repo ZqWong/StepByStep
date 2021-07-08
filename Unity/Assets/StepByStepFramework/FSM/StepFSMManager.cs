@@ -10,7 +10,7 @@ using xr.StepByStep.FSM;
 
 namespace xr.StepByStepFramework.FSM
 {
-    public class StepFSMManager : SingletonMonoBehaviourClass<StepFSMManager>
+    public class StepFSMManager : SingletonMonoBehaviour<StepFSMManager>
     {
         /// <summary>
         /// FMS状态
@@ -77,9 +77,9 @@ namespace xr.StepByStepFramework.FSM
         /// </summary>
         public void Start()
         {
-            ConfigureFSM();
+            //ConfigureFSM();
             //StartFSM(this, null);
-            m_initialized = true;
+            //m_initialized = true;
         }
 
         public void Update()
@@ -97,6 +97,8 @@ namespace xr.StepByStepFramework.FSM
         /// <param name="e"></param>
         private void StartFSM(object sender, EventArgs e)
         {
+            m_initialized = true;
+            ConfigureFSM();
             m_fsm.Start();
         }
 
@@ -166,7 +168,7 @@ namespace xr.StepByStepFramework.FSM
         }
         private void EnterExecuteStepHandler()
         {
-            SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(FSMEventConst.LEAVE_START_STEP_KEY,
+            SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(FSMEventConst.ENTER_EXECUTE_STEP_KEY,
                 new FSMEventStateArg(m_fsm.PreviousState, m_fsm.CurrentState, () =>
                 {
                     m_fsm.ReactTo(FSMEvent.EXECUTE_TO_LEAVE);
