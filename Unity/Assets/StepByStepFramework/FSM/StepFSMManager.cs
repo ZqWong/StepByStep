@@ -56,7 +56,7 @@ namespace xr.StepByStepFramework.FSM
         #region private variables
 
         private FSM<FSMState, FSMEvent> m_fsm = null;
-        private bool m_initialized = false;
+        public bool Initialized { get; private set; }
 
         #endregion
 
@@ -79,7 +79,7 @@ namespace xr.StepByStepFramework.FSM
         {
             //ConfigureFSM();
             //StartFSM(this, null);
-            //m_initialized = true;
+            //Initialized = true;
         }
 
         public void Update()
@@ -97,7 +97,7 @@ namespace xr.StepByStepFramework.FSM
         /// <param name="e"></param>
         private void StartFSM(object sender, EventArgs e)
         {
-            m_initialized = true;
+            Initialized = true;
             ConfigureFSM();
             m_fsm.Start();
         }
