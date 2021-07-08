@@ -113,6 +113,7 @@ public class LinearStepDataManager : SingletonMonoBehaviourClass<LinearStepDataM
     /// </summary>
     public void EnableStepWorkFlow()
     {
+        FeedbackInit();
         SingletonProvider<EventManager>.Instance.RaiseEventByEventKey(FSMEventConst.ENABLE_STEP_KEY, null);
     }
 
@@ -132,7 +133,6 @@ public class LinearStepDataManager : SingletonMonoBehaviourClass<LinearStepDataM
         Debug.Log("StepDataCollection.count :" + StepDataCollection.Count);
 
         StepDataEnumerator = StepDataCollection.GetEnumerator();
-        FeedbackInit();
     }
 
     /// <summary>

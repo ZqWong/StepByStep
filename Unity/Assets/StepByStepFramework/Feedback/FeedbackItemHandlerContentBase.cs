@@ -20,7 +20,7 @@ namespace xr.StepByStepFramework.Feedback
         /// <summary>
         /// 时间设置
         /// </summary>
-        public FeedbackTiming Timing;
+        public FeedbackTiming Timing = new FeedbackTiming();
         /// <summary>
         /// 反馈标识
         /// </summary>
@@ -118,6 +118,8 @@ namespace xr.StepByStepFramework.Feedback
         /// <param name="executeCompletedEventHandler"></param>
         public virtual void Execute(EventHandler executeCompletedEventHandler)
         {
+            PlayComplete = executeCompletedEventHandler;
+
             if (Timing.InitialDelay > 0f)
             {
                 StartCoroutine(ExecuteCoroutine(executeCompletedEventHandler));
@@ -126,6 +128,19 @@ namespace xr.StepByStepFramework.Feedback
             {
                 RegularPlay(FeedbackDataModel);
             }
+        }
+
+        /// <summary>        
+        /// 停止播放所有反馈
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="feedbacksIntensity"></param>
+        public virtual void Stop(Vector3 position, float feedbacksIntensity = 1.0f)
+        {
+            if (m_infinitePlayCoroutine != null) { StopCoroutine(m_infinitePlayCoroutine); }
+            if (m_repeatedPlayCoroutine != null) { StopCoroutine(m_repeatedPlayCoroutine); }
+            m_playsLeft = Timing.NumberOfRepeats + 1;
+            CustomStopFeedback(FeedbackDataModel);
         }
 
         private IEnumerator ExecuteCoroutine(EventHandler executeCompletedEventHandler)
@@ -138,7 +153,6 @@ namespace xr.StepByStepFramework.Feedback
             {
                 yield return FeedbacksCoroutine.WaitForUnscaled(Timing.InitialDelay);
             }
-            PlayComplete = executeCompletedEventHandler;
             //CustomExecuteHandler(FeedbackDataModel);
             RegularPlay(FeedbackDataModel);
         }
@@ -167,13 +181,15 @@ namespace xr.StepByStepFramework.Feedback
                 m_infinitePlayCoroutine = StartCoroutine(InfinitePlay(dataModel));
                 return;
             }
-
+            
             // 是否启用了有限循环播放
             if (Timing.NumberOfRepeats > 0)
             {
                 m_repeatedPlayCoroutine = StartCoroutine(RepeatedPlay(dataModel));
                 return;
             }
+
+            CustomExecuteHandler(dataModel);
         }
 
         private IEnumerator InfinitePlay(FeedbackDataModelBase dataModel)
@@ -224,6 +240,14 @@ namespace xr.StepByStepFramework.Feedback
         /// </summary>
         /// <param name="dataModel"></param>
         protected abstract void CustomExecuteHandler(FeedbackDataModelBase dataModel);
+
+        /// <summary>       
+        /// 这个方法描述了当反馈停止时会发生什么
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="feedbacksIntensity"></param>
+        protected virtual void CustomStopFeedback(FeedbackDataModelBase dataModel) { }
+
 
         #region Helper
 
