@@ -6,7 +6,7 @@ using etp.xr.Tools;
 using LitJson;
 using UnityEngine;
 
-namespace xr.StepByStepFramework.Feedback_old
+namespace xr.StepByStepFramework.Feedback
 {
     public class FeedbackManager : SingletonMonoBehaviourClass<FeedbackManager>
     {

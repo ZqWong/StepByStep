@@ -7,7 +7,7 @@ using etp.xr.Managers;
 using xr.StepByStepFramework.FSM;
 using System;
 using Assets.Example;
-using xr.StepByStepFramework.Feedback_old;
+using xr.StepByStepFramework.Feedback;
 
 public class LinearStepDataManager : SingletonMonoBehaviourClass<LinearStepDataManager>, IDataManager
 {

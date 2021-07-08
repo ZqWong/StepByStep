@@ -7,7 +7,7 @@ using etp.xr.Managers;
 using etp.xr.Tools;
 using UnityEngine.Events;
 
-namespace xr.StepByStepFramework.Feedback_old
+namespace xr.StepByStepFramework.Feedback
 {
     [System.Serializable]
     public class FeedbackEvents

@@ -4,7 +4,7 @@ using LitJson;
 using UnityEngine;
 using xr.StepByStepFramework.DataModel;
 
-namespace xr.StepByStepFramework.Feedback_old
+namespace xr.StepByStepFramework.Feedback
 {
     public abstract class FeedbackItemHandlerContentBase : MonoBehaviour
     {

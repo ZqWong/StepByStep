@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace xr.StepByStepFramework.Feedback_old
+namespace xr.StepByStepFramework.Feedback
 {
 
     /// the possible modes for the timescale
