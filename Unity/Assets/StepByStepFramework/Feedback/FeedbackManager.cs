@@ -131,9 +131,8 @@ namespace xr.StepByStepFramework.Feedback
                 ? jsonData["feedbacksIntensity"].ToFloat()
                 : 1f;
 
-            FeedbackCollection.Clear();
-
             // 将原来的feedback删除
+            //TODO: 如果有在循环反馈那么先不删除；
             if (FeedbackCollection.Count > 0)
             {
                 foreach (FeedbackItemHandlerContentBase component in FeedbackCollection)
@@ -141,6 +140,8 @@ namespace xr.StepByStepFramework.Feedback
                     Destroy(component);
                 }
             }
+
+            FeedbackCollection.Clear();
 
             // FeedbackFactoryInitialize 已经初始化完毕，对用户自定义的处理进行工厂处理，并添加到FeedbackCollection中
             foreach (JsonData data in jsonData[feedbacksKey])
