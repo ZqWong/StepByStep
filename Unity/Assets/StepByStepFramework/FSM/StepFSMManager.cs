@@ -205,17 +205,17 @@ namespace xr.StepByStepFramework.FSM
 
         #region Debug
 
-        public void OnClick1()
+        public void OnENTER_TO_EXECUTE()
         {
             m_fsm.ReactTo(FSMEvent.ENTER_TO_EXECUTE);
         }
 
-        public void OnClick2()
+        public void OnEXECUTE_TO_LEAVE()
         {
             m_fsm.ReactTo(FSMEvent.EXECUTE_TO_LEAVE);
         }
 
-        public void OnClick3()
+        public void OnLEAVE_TO_ENTER()
         {
             m_fsm.ReactTo(FSMEvent.LEAVE_TO_ENTER);
         }
