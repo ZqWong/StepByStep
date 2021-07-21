@@ -158,6 +158,15 @@ namespace xr.StepByStepFramework.Feedback
         public void  PlayFeedback(Action callback)
         {
             Events.TriggerOnPlay();
+
+            if (FeedbackCollection.Count == 0)
+            {
+                Debug.Log($"FeedbackCollection.Count = 0, jump~");
+                Events.TriggerOnComplete();
+                callback?.Invoke();
+                return;
+            }
+
             foreach (var feedback in FeedbackCollection)
             {
                 feedback.Execute(((sender, args) =>
