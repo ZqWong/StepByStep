@@ -133,13 +133,10 @@ namespace xr.StepByStepFramework.Feedback
 
             // 将原来的feedback删除
             //TODO: 如果有在循环反馈那么先不删除；
-            if (FeedbackCollection.Count > 0)
-            {
-                foreach (FeedbackItemHandlerContentBase component in FeedbackCollection)
-                {
-                    Destroy(component);
-                }
-            }
+            //if (FeedbackCollection.Count > 0)
+            //{
+            //    FeedbackCollection.ForEach((c) => { Destroy(c); });
+            //}
 
             FeedbackCollection.Clear();
 
