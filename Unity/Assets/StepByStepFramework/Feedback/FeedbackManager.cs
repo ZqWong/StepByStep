@@ -169,7 +169,7 @@ namespace xr.StepByStepFramework.Feedback
                 feedback.Execute(((sender, args) =>
                 {
                     Debug.Log("Check feedback all complete");
-                    if(FeedbackCollection.All(f =>{return f.IsComplete = true;}))
+                    if(FeedbackCollection.All(f => f.IsComplete))
                     {
                         Debug.Log("All Complete");
                         Events.TriggerOnComplete();
