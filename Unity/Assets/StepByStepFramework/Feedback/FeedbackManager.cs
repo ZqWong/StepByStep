@@ -115,7 +115,15 @@ namespace xr.StepByStepFramework.Feedback
         /// <param name="feedbackTypeKey">数据中反馈类型的头字段</param>
         public void InitializeWithNewFeedback(JsonData jsonData, string feedbacksKey = "feedbacks", string feedbackTypeKey = "feedbackType")
         {
+            Debug.LogWarning($" ============[ End to step feedback ]============");
+
             IsPlaying = false;
+
+            var id = jsonData.ContainsKey("id")
+                ? jsonData["id"]
+                : "";
+
+            Debug.LogWarning($" ============[ Start to execute step {id}. {feedbacksKey} feedback ]============");
 
             // 获取Feedback全局的一些设置，如果有的话
             DurationMultiplier = jsonData.ContainsKey("durationMultiplier")
@@ -132,13 +140,14 @@ namespace xr.StepByStepFramework.Feedback
                 : 1f;
 
             // 将原来的feedback删除
-            //TODO: 如果有在循环反馈那么先不删除；
             //if (FeedbackCollection.Count > 0)
             //{
             //    FeedbackCollection.ForEach((c) => { Destroy(c); });
             //}
 
             FeedbackCollection.Clear();
+
+            //Debug.Log($"InitializeWithNewFeedback feedbacksKey:{feedbacksKey} feedbackTypeKey:{feedbackTypeKey}");
 
             // FeedbackFactoryInitialize 已经初始化完毕，对用户自定义的处理进行工厂处理，并添加到FeedbackCollection中
             foreach (JsonData data in jsonData[feedbacksKey])
@@ -149,10 +158,21 @@ namespace xr.StepByStepFramework.Feedback
             }
         }
 
+        public void CleanPreStepFeedback()
+        {
+            FeedbackCollection.ForEach(f =>
+            {
+                if (f)
+                {
+                    Destroy(f);
+                }
+            });
+        }
+
         /// <summary>
         /// 播放反馈
         /// </summary>
-        public void  PlayFeedback(Action callback)
+        public void PlayFeedback(Action callback)
         {
             Events.TriggerOnPlay();
 
@@ -168,8 +188,8 @@ namespace xr.StepByStepFramework.Feedback
             {
                 feedback.Execute(((sender, args) =>
                 {
-                    Debug.Log("Check feedback all complete");
-                    if(FeedbackCollection.All(f => f.IsComplete))
+                    Debug.Log($"{sender} Execute complete, Check feedback all complete");
+                    if (FeedbackCollection.All(f => f.IsComplete))
                     {
                         Debug.Log("All Complete");
                         Events.TriggerOnComplete();
